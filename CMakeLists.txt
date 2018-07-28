@@ -25,6 +25,8 @@ add_library(
     sha2-x86-notextrel.S
     util.c
     yescrypt.c
+    yespower/yespower.c
+    yespower/sha256.c
     libcpuminer.c
 )
 
@@ -83,6 +85,7 @@ endif()
 
 target_include_directories(
     cpuminer PRIVATE
+    ${CMAKE_SOURCE_DIR}/src/main/cpp/libcpuminer
     ${CMAKE_SOURCE_DIR}/../distribution/zlib/include
     ${CMAKE_SOURCE_DIR}/../distribution/curl/include
     ${CMAKE_SOURCE_DIR}/../distribution/jansson/include)
