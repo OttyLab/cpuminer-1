@@ -14,6 +14,7 @@
 //
 // 2018/02/17 @001 Support Android logcat
 // 2018/02/17 @002 Log with callback
+// 2018/08/20 @003 User default Log when callback is null
 //
 
 #define _GNU_SOURCE
@@ -157,8 +158,13 @@ void applog(int prio, const char *fmt, ...)
 			tm.tm_sec,
 			fmt);
 		pthread_mutex_lock(&applog_lock);
-		//vfprintf(stderr, f, ap);	/* atomic write to stderr */ //@002D
-		vprintf_cb(f, ap); //@002A
+		//@003A start
+		if (vprintf_cb) {
+			vprintf_cb(f, ap); //@002A
+		} else {
+			vfprintf(stderr, f, ap);	/* atomic write to stderr */
+		}
+		//@003A end
 		fflush(stderr);
 		pthread_mutex_unlock(&applog_lock);
 	}
