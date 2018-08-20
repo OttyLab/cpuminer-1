@@ -127,6 +127,7 @@ bool allow_getwork = true;
 bool want_stratum = true;
 bool have_stratum = false;
 bool use_syslog = false;
+static bool opt_quiet = false;
 static int opt_retries = -1;
 static int opt_fail_pause = 30;
 int opt_timeout = 0;
@@ -1160,6 +1161,12 @@ static void *miner_thread(void *userdata)
 			thr_hashrates[thr_id] =
 				hashes_done / (diff.tv_sec + 1e-6 * diff.tv_usec);
 			pthread_mutex_unlock(&stats_lock);
+		}
+		if (!opt_quiet) {
+			sprintf(s, thr_hashrates[thr_id] >= 1e6 ? "%.0f" : "%.2f",
+					1e-3 * thr_hashrates[thr_id]);
+			applog(LOG_INFO, "thread %d: %lu hashes, %s khash/s",
+				   thr_id, hashes_done, s);
 		}
 		if (opt_benchmark && thr_id == opt_n_threads - 1) {
 			double hashrate = 0.;
